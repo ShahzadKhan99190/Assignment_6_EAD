@@ -1,0 +1,277 @@
+1. Singleton Design Pattern:
+----------------------------
+
+public class Singleton
+{
+    private static Singleton instance;
+
+    private Singleton() { }
+
+    public static Singleton Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new Singleton();
+            }
+            return instance;
+        }
+    }
+}
+Singleton singleton1 = Singleton.Instance;
+Singleton singleton2 = Singleton.Instance;
+
+Console.WriteLine(singleton1 == singleton2);
+
+
+
+2. Factory Design Pattern:
+--------------------------
+
+public abstract class Product
+{
+    public abstract string Display();
+}
+
+public class ConcreteProductA : Product
+{
+    public override string Display()
+    {
+        return "Product A";
+    }
+}
+
+public class ConcreteProductB : Product
+{
+    public override string Display()
+    {
+        return "Product B";
+    }
+}
+
+public abstract class Factory
+{
+    public abstract Product CreateProduct();
+}
+
+public class ConcreteFactoryA : Factory
+{
+    public override Product CreateProduct()
+    {
+        return new ConcreteProductA();
+    }
+}
+
+public class ConcreteFactoryB : Factory
+{
+    public override Product CreateProduct()
+    {
+        return new ConcreteProductB();
+    }
+}
+
+Factory factoryA = new ConcreteFactoryA();
+Product productA = factoryA.CreateProduct();
+Console.WriteLine(productA.Display());
+
+Factory factoryB = new ConcreteFactoryB();
+Product productB = factoryB.CreateProduct();
+Console.WriteLine(productB.Display());
+
+
+
+3. Abstract Factory Design Pattern:
+-----------------------------------
+
+public interface AbstractProductA
+{
+    string Display();
+}
+
+public interface AbstractProductB
+{
+    string Display();
+}
+
+public class ProductA1 : AbstractProductA
+{
+    public string Display()
+    {
+        return "Product A1";
+    }
+}
+
+public class ProductA2 : AbstractProductA
+{
+    public string Display()
+    {
+        return "Product A2";
+    }
+}
+
+public class ProductB1 : AbstractProductB
+{
+    public string Display()
+    {
+        return "Product B1";
+    }
+}
+
+public class ProductB2 : AbstractProductB
+{
+    public string Display()
+    {
+        return "Product B2";
+    }
+}
+
+public interface AbstractFactory
+{
+    AbstractProductA CreateProductA();
+    AbstractProductB CreateProductB();
+}
+
+public class ConcreteFactory1 : AbstractFactory
+{
+    public AbstractProductA CreateProductA()
+    {
+        return new ProductA1();
+    }
+
+    public AbstractProductB CreateProductB()
+    {
+        return new ProductB1();
+    }
+}
+
+public class ConcreteFactory2 : AbstractFactory
+{
+    public AbstractProductA CreateProductA()
+    {
+        return new ProductA2();
+    }
+
+    public AbstractProductB CreateProductB()
+    {
+        return new ProductB2();
+    }
+}
+
+AbstractFactory factory1 = new ConcreteFactory1();
+AbstractProductA productA1 = factory1.CreateProductA();
+AbstractProductB productB1 = factory1.CreateProductB();
+
+Console.WriteLine(productA1.Display());  
+Console.WriteLine(productB1.Display());
+
+
+
+
+4. Builder Design Pattern:
+--------------------------
+
+
+public class Director
+{
+    private IBuilder builder;
+
+    public Director(IBuilder builder)
+    {
+        this.builder = builder;
+    }
+
+    public void Construct()
+    {
+        builder.BuildPartA();
+        builder.BuildPartB();
+    }
+}
+
+public interface IBuilder
+{
+    void BuildPartA();
+    void BuildPartB();
+    Product GetResult();
+}
+
+public class ConcreteBuilder : IBuilder
+{
+    private Product product = new Product();
+
+    public void BuildPartA()
+    {
+        product.Add("Part A");
+    }
+
+    public void BuildPartB()
+    {
+        product.Add("Part B");
+    }
+
+    public Product GetResult()
+    {
+        return product;
+    }
+}
+
+public class Product
+{
+    private List<string> parts = new List<string>();
+
+    public void Add(string part)
+    {
+        parts.Add(part);
+    }
+
+    public string Display()
+    {
+        return string.Join(", ", parts);
+    }
+}
+
+IBuilder builder = new ConcreteBuilder();
+Director director = new Director(builder);
+director.Construct();
+Product product = builder.GetResult();
+
+Console.WriteLine(product.Display());  
+
+
+5. Prototype Design Pattern:
+---------------------------
+
+public interface IPrototype
+{
+    IPrototype Clone();
+}
+
+public class ConcretePrototype : IPrototype
+{
+    private string value;
+
+    public ConcretePrototype(string value)
+    {
+        this.value = value;
+    }
+
+    public IPrototype Clone()
+    {
+        return new ConcretePrototype(value);
+    }
+
+    public string Display()
+    {
+        return value;
+    }
+}
+
+IPrototype prototype = new ConcretePrototype("Original");
+IPrototype clone1 = prototype.Clone();
+IPrototype clone2 = prototype.Clone();
+
+Console.WriteLine(((ConcretePrototype)clone1).Display()); 
+Console.WriteLine(((ConcretePrototype)clone2).Display());  
+
+
+
